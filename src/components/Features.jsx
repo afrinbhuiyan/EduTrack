@@ -38,7 +38,7 @@ const Features = () => {
   const features = [
     {
       id: 1,
-      animation: trackerJson, // ✅ Lottie file
+      animation: trackerJson,
       title: "Class Schedule Tracker",
       description:
         "Never miss a class again! Organize your routine and track everything with ease.",
@@ -94,6 +94,16 @@ const Features = () => {
     <div className="relative overflow-hidden">
       {/* Features Section */}
       <section className="py-20 relative z-10">
+        {/* 🔹 Section Header */}
+      <div className="text-center mb-12">
+        <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
+          Explore Our Features
+        </h2>
+        <p className="text-gray-600 max-w-2xl mx-auto">
+          Smart tools to organize your study life – from schedules to budget,
+          everything in one place.
+        </p>
+      </div>
         <div className="max-w-7xl mx-auto px-6">
           {/* Feature Cards Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -127,9 +137,7 @@ const Features = () => {
                   <motion.h3
                     className={`text-xl font-semibold mb-4 ${feature.titleColor} relative z-10 transition-colors duration-300`}
                     animate={
-                      activeCard === feature.id
-                        ? { scale: [1, 1.05, 1] }
-                        : {}
+                      activeCard === feature.id ? { scale: [1, 1.05, 1] } : {}
                     }
                     transition={{ duration: 0.4 }}
                   >
