@@ -3,8 +3,6 @@
 EduTrack is a fun and modern **Learning Management System (LMS)** built with **React** — perfect for both students and instructors! 🎓✨  
 Explore courses, track your learning journey, and manage educational content all in one place.
 
-![Cute Girl](https://i.pinimg.com/736x/79/4f/9c/794f9c11ae909686d2c5ef6c94acae97.jpg)
-
 ## 💖 Features
 
 EduTrack comes packed with lots of exciting features:  
@@ -17,4 +15,4 @@ EduTrack comes packed with lots of exciting features:
 - **Analytics Dashboard:** Peek into student activity, course engagement, and performance insights.  
 
 > **Note:** EduTrack is still growing, so you might notice a few things that are unfinished.  
-> Want to make it even cuter and better? **Contribute!** We’d love your help ❤️
+> Want to make it even cuter and better? **Contribute!** We’d love your help ❤️  <img src="https://i.pinimg.com/originals/74/fb/9d/74fb9d629f3d7dd509a67e9a9b721f05.gif" width="40"/>
