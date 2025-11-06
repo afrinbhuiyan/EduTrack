@@ -17,3 +17,8 @@
   font-family: "Outfit", sans-serif;
   font-optical-sizing: auto;
 }
+
+input[type="time"]::-webkit-calendar-picker-indicator {
+  display: none;
+  -webkit-appearance: none;
+}

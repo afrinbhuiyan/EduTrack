@@ -34,7 +34,7 @@ const Header = ({ onMenuToggle }) => {
   const unreadNotifications = notifications.filter(n => !n.read).length;
 
   return (
-    <div className="w-full flex items-center justify-between bg-[#001e36] px-6 h-16 sticky top-0 z-50 border-b border-gray-800">
+    <div className="w-full flex items-center justify-between bg-[#001e36] px-6 h-14 sticky top-0 z-50 border-b border-gray-800">
       {/* Left: Menu toggle and title */}
       <div className="flex items-center">
         <button 

@@ -73,16 +73,16 @@ export default function UniqueSidebar() {
   return (
     <motion.div
       animate={{ width: isCollapsed ? 72 : width }}
-      className="relative h-screen flex flex-col 
-    bg-gradient-to-b from-teal-600/90 to-teal-800/90 
-    backdrop-blur-xl border-r border-teal-400/40 shadow-xl transition-all w-[72px]"
+      className="h-screen flex flex-col 
+    bg-gradient-to-b from-[#7ea6b3] to-[#7ea6b3]/80
+    backdrop-blur-xl border-r border-teal-400/40 shadow-xl  w-[72px]"
     >
       {/* Collapse Button */}
 
       <button
         aria-label="Toggle sidebar"
         onClick={() => setIsCollapsed(!isCollapsed)}
-        className="absolute -right-3 top-6 bg-teal-500 text-white 
+        className="absolute -right-3 top-6 bg-[#3d91af] text-white 
       p-1 rounded-full shadow-md hover:scale-110 transition"
       >
         <FiChevronLeft
@@ -99,7 +99,7 @@ export default function UniqueSidebar() {
               <button
                 key={i}
                 onClick={handleLogout}
-                className="flex items-center gap-3 p-2 rounded-sm cursor-pointer text-white hover:bg-teal-500/40 w-full"
+                className="flex items-center gap-3 p-2 rounded-sm cursor-pointer text-white hover:bg-[#3d91af]/70 w-full"
               >
                 <span className="text-xl shrink-0">{item.icon}</span>
                 {!isCollapsed && (
@@ -122,8 +122,8 @@ export default function UniqueSidebar() {
               className={({ isActive }) =>
                 `flex items-center gap-3 p-2 rounded-sm cursor-pointer transition relative group text-white w-full ${
                   isActive
-                    ? "bg-teal-500/50 font-bold shadow-[0_0_8px_rgba(250,204,21,0.7)]"
-                    : "hover:bg-teal-500/40"
+                    ? "bg-[#3d91af]/70 font-bold"
+                    : "hover:bg-[#3d91af]/70"
                 }`
               }
             >

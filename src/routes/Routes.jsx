@@ -5,6 +5,9 @@ import Login from "../pages/auth/Login";
 import Register from "../pages/auth/Register";
 import PrivateRoute from "./PrivateRoute";
 import DashboardLayout from "../layouts/DashboardLayout";
+import Schedule from "../pages/dashboard/Schedule";
+import Budget from "../pages/dashboard/Budget";
+import ExamPlanner from "../pages/dashboard/ExamPlanner";
 
 export const router = createBrowserRouter([
   {
@@ -37,7 +40,18 @@ export const router = createBrowserRouter([
           </div>
         ),
       },
-      // Additional protected routes can be added here
+      {
+        path: "schedule",
+        Component: Schedule,
+      },
+      {
+        path: "budget",
+        Component: Budget,
+      },
+      {
+        path: "exam",
+        Component: ExamPlanner,
+      }
     ],
   }
 ]);

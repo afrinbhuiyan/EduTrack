@@ -104,7 +104,7 @@ const authInfo = useMemo(
     updateUserProfile,
     resetPassword,
   }),
-  [user, loading, createUser, signInUser, googleLogin, logout, updateUserProfile, resetPassword]
+  // [user, loading, createUser, signInUser, googleLogin, logout, updateUserProfile, resetPassword]
 );
 
   return <AuthContext.Provider value={authInfo}>{children}</AuthContext.Provider>;
