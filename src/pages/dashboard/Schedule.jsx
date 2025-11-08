@@ -290,18 +290,19 @@ export default function Schedule() {
       {isLoading && <Loading />}
 
       <div className="">
-        <div className="flex justify-between items-center">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
           {/* Header */}
-          <div className="text-start mb-5">
-            <h1 className="text-3xl font-bold mb-2">Class Schedule Tracker</h1>
-            <p className="text-gray-600 text-sm">
-              Never miss a class again! Keep track of your weekly schedule with
-              color-coded subjects.
-            </p>
-            <p className="text-sm text-gray-500 mt-2">
-              Current Time: {currentTime}
-            </p>
-          </div>
+          <div className="text-start">
+      <h1 className="text-3xl font-bold mb-2">Class Schedule Tracker</h1>
+      <p className="text-gray-600 text-sm">
+        Never miss a class again! Keep track of your weekly schedule with
+        color-coded subjects.
+      </p>
+      <p className="text-sm text-gray-500 mt-2">
+        Current Time: {currentTime}
+      </p>
+    </div>
+
 
           {/* Export/Import */}
           <div className="flex gap-4">
