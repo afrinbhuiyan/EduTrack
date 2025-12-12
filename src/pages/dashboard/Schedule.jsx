@@ -99,6 +99,7 @@ export default function Schedule() {
     "Saturday",
     "Sunday",
   ];
+  
   const colorOptions = [
     { name: "Purple", value: "#6A67CE" },
     { name: "Coral", value: "#FF7C7C" },
