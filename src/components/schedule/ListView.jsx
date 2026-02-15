@@ -13,8 +13,8 @@ const ListView = ({ classes, onEdit, onDelete, calculateEndTime, onDragEnd }) =>
           >
             {classes.map((cls, index) => (
               <Draggable
-                key={cls.id}
-                draggableId={cls.id.toString()}
+                key={cls._id}
+                draggableId={cls._id.toString()}
                 index={index}
               >
                 {(provided) => (

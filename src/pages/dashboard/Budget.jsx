@@ -132,9 +132,9 @@ export default function Budget() {
         <div className="grid grid-cols-12 gap-6">
           {/* Left Sidebar */}
           <div className="col-span-3 space-y-6">
-            <QuickStats balance={balance} income={income} expense={expense} />
+            <QuickStats balance={balance} income={income} expense={expense} onAddTransaction={handleAddTransaction} />
             <SpendingForecast spendingForecast={spendingForecast} balance={balance} />
-            <TransactionForm onAddTransaction={handleAddTransaction} />
+            {/* <TransactionForm onAddTransaction={handleAddTransaction} /> */}
             <SavingsGoal 
               savingsTarget={savingsTarget}
               setSavingsTarget={setSavingsTarget}

@@ -69,18 +69,21 @@ const AuthProvider = ({ children }) => {
   };
 
   const updateUserProfile = (profile) => {
-  setLoading(true);
-  return updateProfile(auth.currentUser, profile)
-    .then(() => {
-      setUser({ ...auth.currentUser });
-      return true;
-    })
-    .catch((error) => {
-      console.error("Error updating profile:", error.message);
-      throw error;
-    })
-    .finally(() => setLoading(false));
-};
+    if (!auth.currentUser) {
+      return Promise.reject(new Error("No user is currently logged in"));
+    }
+    setLoading(true);
+    return updateProfile(auth.currentUser, profile)
+      .then(() => {
+        setUser({ ...auth.currentUser });
+        return true;
+      })
+      .catch((error) => {
+        console.error("Error updating profile:", error.message);
+        throw error;
+      })
+      .finally(() => setLoading(false));
+  };
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {

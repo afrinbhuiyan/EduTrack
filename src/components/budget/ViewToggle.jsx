@@ -6,9 +6,9 @@ const ViewToggle = ({ showCalendar, setShowCalendar }) => {
     <div className="flex gap-4">
       <button
         onClick={() => setShowCalendar(false)}
-        className={`px-4 py-2 rounded-lg font-medium transition-all flex items-center gap-2 ${
+        className={`px-4 py-2 rounded-md font-medium transition-all flex items-center gap-2 ${
           !showCalendar
-            ? "bg-emerald-500 text-white shadow-md"
+            ? "bg-[#7ea6b3] text-white"
             : "bg-gray-100 text-gray-600 hover:bg-gray-200"
         }`}
       >
@@ -17,9 +17,9 @@ const ViewToggle = ({ showCalendar, setShowCalendar }) => {
       </button>
       <button
         onClick={() => setShowCalendar(true)}
-        className={`px-4 py-2 rounded-lg font-medium transition-all flex items-center gap-2 ${
+        className={`px-4 py-2 rounded-md font-medium transition-all flex items-center gap-2 ${
           showCalendar
-            ? "bg-emerald-500 text-white shadow-md"
+            ? "bg-[#7ea6b3] text-white"
             : "bg-gray-100 text-gray-600 hover:bg-gray-200"
         }`}
       >

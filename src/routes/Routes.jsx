@@ -8,12 +8,13 @@ import DashboardLayout from "../layouts/DashboardLayout";
 import Schedule from "../pages/dashboard/Schedule";
 import Budget from "../pages/dashboard/Budget";
 import ExamPlanner from "../pages/dashboard/ExamPlanner";
+import Contact from "../pages/Contact";
 
 export const router = createBrowserRouter([
   {
     path: "/",
     element: <MainLayout />,
-    children: [{ index: true, Component: Home }],
+    children: [{ index: true, Component: Home }, { path: "contact", Component: Contact }],
   },
   { path: "/login", Component: Login },
   { path: "/register", Component: Register },
@@ -26,10 +27,12 @@ export const router = createBrowserRouter([
     ),
   },
   {
-    path: "dashboard", 
-    element: <PrivateRoute>
-      <DashboardLayout />
-    </PrivateRoute> ,
+    path: "dashboard",
+    element: (
+      <PrivateRoute>
+        <DashboardLayout />
+      </PrivateRoute>
+    ),
     children: [
       {
         index: true,
@@ -51,7 +54,7 @@ export const router = createBrowserRouter([
       {
         path: "exam",
         Component: ExamPlanner,
-      }
+      },
     ],
-  }
+  },
 ]);

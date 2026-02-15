@@ -13,6 +13,7 @@ const InsightsCard = ({ expenseInsights }) => {
     >
       <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
         <FiPieChart />
+        
         Smart Insights
       </h2>
       <div className="grid grid-cols-3 gap-4">
