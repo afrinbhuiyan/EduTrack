@@ -1,6 +1,9 @@
 import { motion } from "framer-motion";
 
 const ScheduleCard = ({ cls, onEdit, onDelete, calculateEndTime }) => {
+
+  // console.log("Rendering ScheduleCard for:", cls); // Debug log to check props
+
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.9 }}
@@ -38,7 +41,10 @@ const ScheduleCard = ({ cls, onEdit, onDelete, calculateEndTime }) => {
 
           <div className="flex space-x-1 sm:space-x-2 bg-white/80 rounded-xl sm:rounded-2xl p-0.5 sm:p-1 backdrop-blur-sm border border-gray-200/50">
             <button
-              onClick={() => onEdit(cls)}
+              onClick={(e) => {
+                
+                onEdit(cls);
+              }}
               className="p-1 sm:p-2 hover:bg-gray-100 rounded-lg sm:rounded-xl transition-all duration-200 hover:scale-110"
               title="Edit"
             >
@@ -57,7 +63,10 @@ const ScheduleCard = ({ cls, onEdit, onDelete, calculateEndTime }) => {
               </svg>
             </button>
             <button
-              onClick={() => onDelete(cls.id)}
+              onClick={(e) => {
+               
+                onDelete(cls._id);
+              }}
               className="p-1 sm:p-2 hover:bg-gray-100 rounded-lg sm:rounded-xl transition-all duration-200 hover:scale-110"
               title="Delete"
             >
@@ -93,7 +102,7 @@ const ScheduleCard = ({ cls, onEdit, onDelete, calculateEndTime }) => {
           <div className="text-right">
             <div className="text-xs sm:text-sm text-gray-500">{cls.day}</div>
             <div className="text-sm sm:text-base font-semibold text-gray-900">
-              {cls.time} - {calculateEndTime(cls.time)}
+              {(cls.startTime || cls.time)} - {calculateEndTime(cls.startTime || cls.time)}
             </div>
           </div>
         </div>

@@ -56,7 +56,7 @@ const Login = () => {
           <div className="relative z-10 mb-10">
             <div className="flex items-center space-x-4 mb-6">
               <img
-                src="/public/logo.png"
+                src="/logo.png"
                 alt="EduTrack Logo"
                 className="w-12 h-12 object-contain"
               />

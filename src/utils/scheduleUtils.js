@@ -58,22 +58,28 @@ export const getCalendarEvents = (classes) => {
     // Calculate the date for this week's class day
     const classDate = today.day(dayOfWeek);
     
-    // Parse start time
-    const [startHours, startMinutes] = cls.time.split(":").map(Number);
+    // Parse start time - handle both 'time' and 'startTime' fields
+    const timeString = cls.startTime || cls.time;
+    if (!timeString) {
+      console.warn("No time field found for class:", cls);
+      return null;
+    }
+    
+    const [startHours, startMinutes] = timeString.split(":").map(Number);
     const startMoment = classDate.clone().hour(startHours).minute(startMinutes).second(0);
     
     // Calculate end time
     const endMoment = startMoment.clone().add(60, 'minutes'); // 1 hour duration
     
     return {
-      id: cls.id,
+      id: cls._id,
       title: `${cls.subject} - ${cls.type}`,
       start: startMoment.toDate(),
       end: endMoment.toDate(),
       resource: cls,
       allDay: false,
     };
-  });
+  }).filter(event => event !== null);
 };
 
 // Alternative method for calendar events (simpler approach)
@@ -96,12 +102,15 @@ export const getCalendarEventsSimple = (classes) => {
     const dayIndex = dayMap[cls.day];
     const classDate = startOfWeek.clone().add(dayIndex, 'days');
     
-    const [startHours, startMinutes] = cls.time.split(":").map(Number);
+    const timeString = cls.startTime || cls.time;
+    if (!timeString) return null;
+    
+    const [startHours, startMinutes] = timeString.split(":").map(Number);
     const startMoment = classDate.clone().hour(startHours).minute(startMinutes).second(0);
     const endMoment = startMoment.clone().add(60, 'minutes');
     
     return {
-      id: cls.id,
+      id: cls._id,
       title: `${cls.subject} - ${cls.type}`,
       start: startMoment.toDate(),
       end: endMoment.toDate(),
@@ -235,7 +244,7 @@ export const importSchedule = (file, onSuccess, onError) => {
       
       // Basic validation of imported data
       if (Array.isArray(importedClasses) && importedClasses.every(cls => 
-        cls.subject && cls.day && cls.time
+        cls.subject && cls.day && (cls.time || cls.startTime)
       )) {
         onSuccess(importedClasses);
       } else {
@@ -336,10 +345,10 @@ export const processRecurringClasses = (classData, isEditing = false) => {
     newClasses = classData.recurringDays.map((day) => ({
       ...classData,
       day,
-      id: isEditing ? classData.id : Date.now() + Math.random(),
+      _id: isEditing ? classData._id : Date.now() + Math.random(),
     }));
   } else {
-    newClasses = [{ ...classData, id: isEditing ? classData.id : Date.now() }];
+    newClasses = [{ ...classData, _id: isEditing ? classData._id : Date.now() }];
   }
   
   return newClasses;

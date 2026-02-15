@@ -32,7 +32,7 @@ const ScheduleList = ({ cls, onEdit, onDelete, calculateEndTime, provided }) => 
                 {cls.type}
               </span>
               <span className="ml-3 text-sm text-gray-600">
-                {cls.day} • {cls.time} - {calculateEndTime(cls.time)}
+                {cls.day} • {(cls.startTime || cls.time)} - {calculateEndTime(cls.startTime || cls.time)}
               </span>
             </div>
           </div>
@@ -58,7 +58,7 @@ const ScheduleList = ({ cls, onEdit, onDelete, calculateEndTime, provided }) => 
             </svg>
           </button>
           <button
-            onClick={() => onDelete(cls.id)}
+            onClick={() => onDelete(cls._id)}
             className="p-2 text-rose-600 hover:bg-rose-100 rounded-full transition-all"
             title="Delete"
           >

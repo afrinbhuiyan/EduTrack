@@ -59,11 +59,11 @@ const CalendarView = ({ transactions }) => {
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="bg-white rounded-lg p-6 shadow-sm border border-gray-100"
+      className="bg-white rounded-md p-6 border border-gray-200"
     >
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-xl font-semibold flex items-center gap-2 text-gray-800">
-          <FiCalendar className="text-emerald-600" />
+          <FiCalendar className="text-[#7ea6b3]" />
           Calendar View -{" "}
           {new Date(selectedYear, selectedMonth).toLocaleString(
             "default",
@@ -74,7 +74,9 @@ const CalendarView = ({ transactions }) => {
           <select
             value={selectedMonth}
             onChange={(e) => setSelectedMonth(Number(e.target.value))}
-            className="p-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none"
+            className="p-2 border border-gray-200 rounded-sm focus:ring-1 focus:ring-[#7ea6b3] outline-none
+            
+            "
           >
             {Array.from({ length: 12 }, (_, i) => (
               <option key={i} value={i}>

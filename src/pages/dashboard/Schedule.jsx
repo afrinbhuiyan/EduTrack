@@ -1,7 +1,7 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
-import { motion } from "framer-motion";
+import { motion } from "framer-motion"
 
 // Utils imports
 import {
@@ -15,9 +15,7 @@ import {
   getPieChartData,
   getInstructorChartData,
   getUniqueInstructors,
-  getSampleData,
   getDefaultClassData,
-  processRecurringClasses,
   getLineChartData,
   getLineChartOptions,
   getCalendarEvents,
@@ -52,6 +50,7 @@ import {
   LineElement,
   PointElement,
   RadialLinearScale,
+  Filler,
 } from "chart.js";
 import { showNotification } from "../../utils/notification";
 
@@ -65,7 +64,8 @@ ChartJS.register(
   ArcElement,
   LineElement,
   PointElement,
-  RadialLinearScale
+  RadialLinearScale,
+  Filler
 );
 
 // Moment localizer for react-big-calendar
@@ -89,7 +89,7 @@ export default function Schedule() {
   });
   const [isFormOpen, setIsFormOpen] = useState(false);
 
-  const days = [
+  const days = useMemo(() => [
     "All",
     "Monday",
     "Tuesday",
@@ -98,44 +98,69 @@ export default function Schedule() {
     "Friday",
     "Saturday",
     "Sunday",
-  ];
+  ], []);
   
-  const colorOptions = [
+  const colorOptions = useMemo(() => [
     { name: "Purple", value: "#6A67CE" },
     { name: "Coral", value: "#FF7C7C" },
     { name: "Teal", value: "#4ECDC4" },
     { name: "Gold", value: "#FFD166" },
     { name: "Steel Blue", value: "#4682B4" },
     { name: "Pale Green", value: "#98FB98" },
-  ];
-  const classTypes = [
+  ], []);
+  
+  const classTypes = useMemo(() => [
     "Lecture",
     "Lab",
     "Tutorial",
     "Seminar",
     "Workshop",
     "Exam",
-  ];
+  ], []);
 
-  // Load from local storage
-  useEffect(() => {
-    const savedClasses = localStorage.getItem("classes");
-    if (savedClasses) {
-      setClasses(JSON.parse(savedClasses));
+  // Fetch classes from API
+  const fetchClasses = useCallback(async () => {
+    try {
+      setIsLoading(true);
+      
+      // TODO: Add token when user is authenticated
+      // const token = await user?.getIdToken();
+      // const headers = {
+      //   "Authorization": `Bearer ${token}`,
+      // };
+      
+      const headers = {
+        // Temporarily not requiring token for testing
+        "Content-Type": "application/json",
+      };
+      
+      const response = await fetch("/api/schedules", {
+        headers,
+      });
+      
+      if (!response.ok) {
+        throw new Error("Failed to fetch classes");
+      }
+      
+      const data = await response.json();
+      setClasses(data);
+    } catch (err) {
+      console.error("Error fetching classes:", err);
+      showNotification("Failed to load schedule", "error");
+    } finally {
+      setIsLoading(false);
     }
   }, []);
 
-  // Save to local storage
   useEffect(() => {
-    localStorage.setItem("classes", JSON.stringify(classes));
-  }, [classes]);
-
-  // Sample data
-  useEffect(() => {
-    if (classes.length === 0) {
-      setClasses(getSampleData());
-    }
-  }, [classes.length]);
+    // TODO: Only fetch when user is authenticated
+    // if (user?.uid) {
+    //   fetchClasses();
+    // }
+    
+    // For now, fetch without authentication check
+    fetchClasses();
+  }, [fetchClasses]);
 
   // Real-time clock
   useEffect(() => {
@@ -146,7 +171,7 @@ export default function Schedule() {
   }, []);
 
   const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
+    const { name, value, checked } = e.target;
     if (name === "recurring") {
       setNewClass({ ...newClass, recurring: checked });
     } else if (name === "recurringDays") {
@@ -170,39 +195,134 @@ export default function Schedule() {
     }
 
     setIsLoading(true);
-    await new Promise((resolve) => setTimeout(resolve, 500));
+    try {
+      // TODO: Add token when user is authenticated
+      // const token = await user?.getIdToken();
+      
+      const method = isEditing ? "PUT" : "POST";
+      const url = isEditing ? `/api/schedules/${editId}` : "/api/schedules";
 
-    const newClasses = processRecurringClasses(newClass, isEditing);
+      const headers = {
+        "Content-Type": "application/json",
+        // TODO: Uncomment token when authentication is ready
+        // "Authorization": `Bearer ${token}`,
+      };
 
-    if (isEditing) {
-      setClasses(
-        classes.map((cls) =>
-          cls.id === editId ? { ...newClass, id: editId } : cls
-        )
-      );
-      showNotification("Class updated successfully!");
-    } else {
-      setClasses([...classes, ...newClasses]);
-      showNotification("Class(es) added successfully!");
+      // include all newClass fields to ensure 'type' and others are sent
+      const payload = {
+        ...newClass,
+        // Map/override fields expected by backend
+        startTime: newClass.time, // map time → startTime
+        endTime: calculateEndTime(newClass.time), // auto calculate endTime
+        teacher: newClass.instructor || newClass.teacher,
+        location: newClass.room || newClass.location,
+        // keep canonical `type` as well
+        type: newClass.type,
+        userId: "demo-user",
+      };
+
+      // Debug: log payload before sending to backend
+      // This helps inspect what fields are being submitted
+      console.log("Creating/updating class", isEditing ? `(ID: ${editId})` : "", "payload:", payload);
+      console.log(`Request: ${method} ${url}`);
+
+      const response = await fetch(url, {
+        method,
+        headers,
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        console.error(`❌ Failed ${method} ${url}: Status ${response.status}`, errorData);
+        throw new Error(`Failed to ${isEditing ? "update" : "add"} class: ${errorData.message || response.statusText}`);
+      }
+
+      console.log(`✅ ${method} successful, response status:`, response.status);
+
+      if (isEditing) {
+        // Get updated class from backend response to ensure persistence
+        const updatedClass = await response.json();
+        console.log("✅ Edit - Updated class from backend:", updatedClass);
+        setClasses(
+          classes.map((cls) =>
+            cls._id === editId ? updatedClass : cls
+          )
+        );
+        showNotification("Class updated successfully!");
+      } else {
+        const savedClass = await response.json();
+        console.log("✅ Create - Saved class from backend:", savedClass);
+        setClasses([...classes, savedClass]);
+        showNotification("Class added successfully!");
+      }
+
+      setNewClass(getDefaultClassData());
+      setIsEditing(false);
+      setEditId(null);
+      setIsFormOpen(false);
+    } catch (err) {
+      console.error("❌ Error saving class:", err.message, err);
+      showNotification(err.message, "error");
+    } finally {
+      setIsLoading(false);
     }
-
-    setNewClass(getDefaultClassData());
-    setIsEditing(false);
-    setEditId(null);
-    setIsLoading(false);
-    setIsFormOpen(false);
   };
 
   const editClass = (cls) => {
-    setNewClass(cls);
+    console.log("🔧 EDIT clicked for ID:", cls._id);
+    // Map backend fields back to form fields for editing
+    const classForEdit = {
+      ...cls,
+      time: cls.startTime, // map startTime → time for form
+      // backend may use 'teacher'/'location' or 'instructor'/'room'
+      instructor: cls.instructor || cls.teacher || "",
+      room: cls.room || cls.location || "",
+      type: cls.type || "",
+    };
+    setNewClass(classForEdit);
     setIsEditing(true);
-    setEditId(cls.id);
+    setEditId(cls._id);
     setIsFormOpen(true);
   };
 
-  const deleteClass = (id) => {
-    setClasses(classes.filter((cls) => cls.id !== id));
-    showNotification("Class deleted successfully!");
+  const deleteClass = async (id) => {
+    console.log("🗑️ DELETE clicked for ID:", id);
+    if (!window.confirm("Are you sure you want to delete this class?")) {
+      console.log("❌ Delete cancelled by user");
+      return;
+    }
+
+    console.log("✔️ Delete confirmed, proceeding...");
+    setIsLoading(true);
+    try {
+      // TODO: Add token when user is authenticated
+      // const token = await user?.getIdToken();
+      
+      const headers = {
+        // TODO: Uncomment token when authentication is ready
+        // "Authorization": `Bearer ${token}`,
+      };
+      
+      const response = await fetch(`/api/schedules/${id}`, {
+        method: "DELETE",
+        headers,
+      });
+
+      if (!response.ok) {
+        console.error(`❌ DELETE failed: ${response.status} ${response.statusText}`);
+        throw new Error("Failed to delete class");
+      }
+
+      console.log(`✅ DELETE successful for ID: ${id}`);
+      setClasses(classes.filter((cls) => cls._id !== id));
+      showNotification("Class deleted successfully!");
+    } catch (err) {
+      console.error("❌ Error deleting class:", err);
+      showNotification(err.message, "error");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const cancelEdit = () => {
@@ -219,7 +339,7 @@ export default function Schedule() {
     const [movedClass] = reorderedClasses.splice(result.source.index, 1);
     reorderedClasses.splice(result.destination.index, 0, movedClass);
     const newClasses = classes.map(
-      (cls) => reorderedClasses.find((rCls) => rCls.id === cls.id) || cls
+      (cls) => reorderedClasses.find((rCls) => rCls._id === cls._id) || cls
     );
     setClasses(newClasses);
   };
