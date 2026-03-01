@@ -14,7 +14,8 @@ EduTrack comes packed with lots of exciting features:
 - **Schedule Management:** Keep track of classes, deadlines, and events in one handy calendar.  
 - **Analytics Dashboard:** Peek into student activity, course engagement, and performance insights.  
 
-> **Note:** EduTrack is still growing, so you might notice a few things that are unfinished.  
+ **Note:** EduTrack is still growing, so you might notice a few things that are unfinished.  
 
-> Want to make it even cuter and better? **Contribute!** We’d love your help <img src="https://i.pinimg.com/originals/b1/16/65/b11665024465b911452b24dfee5fd8f6.gif" width="40"/>
+ Want to make it even cuter and better? **Contribute!** We’d love your help <img src="https://i.pinimg.com/originals/b1/16/65/b11665024465b911452b24dfee5fd8f6.gif" width="40"/>
+
 
